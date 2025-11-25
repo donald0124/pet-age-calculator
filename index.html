@@ -180,7 +180,23 @@
 </div>
 
 <script>
-    // JavaScript 邏輯
+    // 定義一個固定的 Key 名稱，方便存取
+    const STORAGE_KEY = 'my_dog_birth_date';
+
+    // --- 1. 頁面載入時：讀取舊資料 ---
+    // 當網頁結構載入完成後執行
+    document.addEventListener('DOMContentLoaded', function() {
+        const savedDate = localStorage.getItem(STORAGE_KEY);
+        const dateInput = document.getElementById('birthDate');
+
+        // 如果有找到儲存的日期
+        if (savedDate) {
+            dateInput.value = savedDate; // 把日期填回去
+            calculateAge(); // 自動幫使用者按一次計算
+        }
+    });
+
+    // --- 2. 計算邏輯 (包含儲存功能) ---
     function calculateAge() {
         const birthDateInput = document.getElementById('birthDate').value;
         const resultDiv = document.getElementById('result');
@@ -198,7 +214,14 @@
             return;
         }
 
-        // --- 1. 計算實際狗齡 ---
+        // ★★★ 關鍵修改：在這裡儲存日期到 localStorage ★★★
+        // 只要驗證通過，就把這個日期存起來
+        localStorage.setItem(STORAGE_KEY, birthDateInput);
+
+
+        // --- 以下為原本的計算邏輯 ---
+        
+        // 1. 計算實際狗齡
         let dogYears = today.getFullYear() - birthDate.getFullYear();
         let dogMonths = today.getMonth() - birthDate.getMonth();
         let dogDays = today.getDate() - birthDate.getDate();
@@ -213,41 +236,26 @@
             dogMonths += 12;
         }
 
-        // --- 2. 換算人類年齡 (基於 AVMA & AKC 通則) ---
-        // 規則：
-        // 1歲 = 15歲
-        // 2歲 = 15 + 9 = 24歲
-        // 3歲以上 = 24 + (N-2)*4 ~ 5 (此處採 +4 保守估計)
-        
+        // 2. 換算人類年齡
         let humanAge = 0;
-
         if (dogYears === 0) {
-            // 未滿一歲：按比例計算 (簡單線性)
-            // 12個月 = 15歲 => 1個月 = 1.25歲
             const totalMonths = dogMonths + (dogDays/30);
             humanAge = totalMonths * 1.25;
         } else if (dogYears === 1) {
-            humanAge = 15;
-            // 加上第二年的進度 (第二年全長9歲，平均一個月0.75歲)
-            humanAge += (dogMonths * 0.75);
+            humanAge = 15 + (dogMonths * 0.75);
         } else if (dogYears === 2) {
-            humanAge = 24;
-            // 加上第三年後的進度 (每年約4-5歲，這裡用4歲算，平均一個月0.33歲)
-            humanAge += (dogMonths * 0.33);
+            humanAge = 24 + (dogMonths * 0.33);
         } else {
-            // 2歲以上
             humanAge = 24 + (dogYears - 2) * 4; 
             humanAge += (dogMonths * 0.33);
         }
 
-        // --- 3. 顯示結果 ---
-        // 組合狗齡字串
+        // 3. 顯示結果
         let dogAgeText = '';
         if (dogYears > 0) dogAgeText += `${dogYears} 歲 `;
         if (dogMonths > 0) dogAgeText += `${dogMonths} 個月`;
         if (dogYears === 0 && dogMonths === 0) dogAgeText += `${dogDays} 天`;
 
-        // 顯示
         resultDiv.style.display = "block";
         resultDiv.innerHTML = `
             <div class="age-output">🐕 狗狗實際年齡： <br><strong>${dogAgeText}</strong></div>
@@ -256,6 +264,6 @@
         `;
     }
 </script>
-
+    
 </body>
 </html>
