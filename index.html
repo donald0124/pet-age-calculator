@@ -1,14 +1,261 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apple 蘋果 iPhone 17 Pro (256G) - PChome 24h購物</title>
-    <link rel="stylesheet" href="style.css">
+    <title>🐶 狗狗年齡計算器</title>
+    <style>
+        /* CSS 樣式 */
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column; /* 讓內容垂直排列以容納 footer */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            
+            /* 背景圖片設定 */
+            background-image: url('https://hackmd-prod-images.s3-ap-northeast-1.amazonaws.com/uploads/upload_fc3a0c7f4a2115b27eb844d8ecb3dbd0.png?AWSAccessKeyId=AKIA3XSAAW6AWSKNINWO&Expires=1764057159&Signature=4i3GbOvwle0DWE5F%2B%2FgB2mF5X9k%3D');
+            background-size: cover;      /* 填滿畫面 */
+            background-position: center; /* 居中顯示 */
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* 背景固定，不隨捲動移動 */
+        }
+
+        /* 為了讓文字看清楚，加一層半透明遮罩在背景上 (選擇性，目前只加在容器上) */
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.92); /* 92% 不透明的白色背景 */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            margin-top: 20px;
+            backdrop-filter: blur(5px); /* 背後稍微模糊 */
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+            text-align: left;
+        }
+
+        input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            background: #fdfdfd;
+        }
+
+        button {
+            background-color: #4CAF50; /* 改用綠色系，較為自然 */
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            width: 100%;
+            transition: transform 0.1s ease, background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.02);
+        }
+
+        #result {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #fff;
+            border-left: 5px solid #4CAF50;
+            text-align: left;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            min-height: 60px;
+            display: none; /* 預設隱藏 */
+        }
+
+        .age-output {
+            margin: 8px 0;
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        .age-output strong {
+            color: #e91e63;
+            font-size: 1.3em;
+        }
+
+        /* 文獻來源區域樣式 */
+        .sources {
+            margin-top: 30px;
+            padding: 15px;
+            width: 90%;
+            max-width: 600px;
+            background-color: rgba(0, 0, 0, 0.7); /* 深色半透明背景 */
+            color: #fff;
+            border-radius: 10px;
+            font-size: 0.85em;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .sources h3 {
+            margin: 0 0 10px 0;
+            font-size: 1em;
+            color: #ddd;
+            border-bottom: 1px solid #555;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .sources ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+            display: inline-block;
+        }
+        
+        .sources li {
+            margin-bottom: 5px;
+        }
+
+        .sources a {
+            color: #81c784;
+            text-decoration: none;
+        }
+        .sources a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>MednewsDrop</h1>
-    <p>幫你速讀醫學期刊 </p>
+
+<div class="container">
+    <h1>🐶 狗狗年齡計算器</h1>
+
+    <label for="birthDate">請輸入狗狗的出生日期：</label>
+    <input type="date" id="birthDate">
+
+    <button onclick="calculateAge()">開始換算</button>
+
+    <div id="result">
+        </div>
+</div>
+
+<div class="sources">
+    <h3>📚 換算公式參考文獻</h3>
+    <ul>
+        <li>
+            1. <strong>AVMA (美國獸醫學會)</strong>: <br>
+            "Senior pets" - 普遍認定第一年約等於 15 歲，第二年約等於 9 歲。
+        </li>
+        <li>
+            2. <strong>AKC (美國犬業俱樂部)</strong>: <br>
+            "How to Calculate Dog Years to Human Years" - 
+            小型/中型犬成年後，平均每年約增加 4-5 歲人類年齡。
+        </li>
+        <li>
+            <span style="color:#aaa; font-size:0.9em;">*註：本程式採通用近似公式：第1年=15, 第2年=+9, 第3年起=+4/年。</span>
+        </li>
+    </ul>
+</div>
+
+<script>
+    // JavaScript 邏輯
+    function calculateAge() {
+        const birthDateInput = document.getElementById('birthDate').value;
+        const resultDiv = document.getElementById('result');
+
+        if (!birthDateInput) {
+            alert("請先選擇狗狗的出生日期喔！");
+            return;
+        }
+
+        const birthDate = new Date(birthDateInput);
+        const today = new Date();
+
+        if (isNaN(birthDate) || birthDate > today) {
+            alert("日期無效或不能選擇未來日期！");
+            return;
+        }
+
+        // --- 1. 計算實際狗齡 ---
+        let dogYears = today.getFullYear() - birthDate.getFullYear();
+        let dogMonths = today.getMonth() - birthDate.getMonth();
+        let dogDays = today.getDate() - birthDate.getDate();
+
+        if (dogDays < 0) {
+            dogMonths--;
+            const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+            dogDays += lastMonth.getDate();
+        }
+        if (dogMonths < 0) {
+            dogYears--;
+            dogMonths += 12;
+        }
+
+        // --- 2. 換算人類年齡 (基於 AVMA & AKC 通則) ---
+        // 規則：
+        // 1歲 = 15歲
+        // 2歲 = 15 + 9 = 24歲
+        // 3歲以上 = 24 + (N-2)*4 ~ 5 (此處採 +4 保守估計)
+        
+        let humanAge = 0;
+
+        if (dogYears === 0) {
+            // 未滿一歲：按比例計算 (簡單線性)
+            // 12個月 = 15歲 => 1個月 = 1.25歲
+            const totalMonths = dogMonths + (dogDays/30);
+            humanAge = totalMonths * 1.25;
+        } else if (dogYears === 1) {
+            humanAge = 15;
+            // 加上第二年的進度 (第二年全長9歲，平均一個月0.75歲)
+            humanAge += (dogMonths * 0.75);
+        } else if (dogYears === 2) {
+            humanAge = 24;
+            // 加上第三年後的進度 (每年約4-5歲，這裡用4歲算，平均一個月0.33歲)
+            humanAge += (dogMonths * 0.33);
+        } else {
+            // 2歲以上
+            humanAge = 24 + (dogYears - 2) * 4; 
+            humanAge += (dogMonths * 0.33);
+        }
+
+        // --- 3. 顯示結果 ---
+        // 組合狗齡字串
+        let dogAgeText = '';
+        if (dogYears > 0) dogAgeText += `${dogYears} 歲 `;
+        if (dogMonths > 0) dogAgeText += `${dogMonths} 個月`;
+        if (dogYears === 0 && dogMonths === 0) dogAgeText += `${dogDays} 天`;
+
+        // 顯示
+        resultDiv.style.display = "block";
+        resultDiv.innerHTML = `
+            <div class="age-output">🐕 狗狗實際年齡： <br><strong>${dogAgeText}</strong></div>
+            <hr style="border: 0; border-top: 1px dashed #ccc; margin: 10px 0;">
+            <div class="age-output">🧑 對照人類年齡： <br><strong>約 ${Math.floor(humanAge)} 歲</strong> <span style="font-size:0.8em; color:#666;">(又 ${Math.round((humanAge % 1)*12)} 個月)</span></div>
+        `;
+    }
+</script>
+
 </body>
 </html>
-
